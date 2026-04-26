@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=DM+Mono:wght@400;500&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #ffffff;
+    --surface: #f8f8f6;
+    --surface2: #f0f0ec;
+    --border: rgba(0,0,0,0.08);
+    --border2: rgba(0,0,0,0.14);
+    --text: #1a1a18;
+    --muted: #6b6b66;
+    --hint: #9c9a94;
+    --accent1: #2563eb;
+    --accent1-light: #eff4ff;
+    --accent1-mid: #bfdbfe;
+    --accent2: #059669;
+    --accent2-light: #ecfdf5;
+    --accent2-mid: #a7f3d0;
+    --accent3: #d97706;
+    --accent3-light: #fffbeb;
+    --accent3-mid: #fde68a;
+    --danger: #dc2626;
+    --danger-light: #fef2f2;
+    --font: 'DM Sans', sans-serif;
+    --mono: 'DM Mono', monospace;
+    --radius: 12px;
+    --radius-sm: 8px;
+    --radius-xs: 5px;
+    --shadow: 0 1px 3px rgba(0,0,0,0.07), 0 1px 2px rgba(0,0,0,0.04);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.09), 0 2px 4px rgba(0,0,0,0.04);
+    --shadow-lg: 0 10px 28px rgba(0,0,0,0.1), 0 4px 10px rgba(0,0,0,0.05);
+  }
+
+  body {
+    font-family: var(--font);
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* NAV TABS */
+  .nav {
+    display: flex;
+    gap: 6px;
+    padding: 20px 24px 0;
+    border-bottom: 1.5px solid var(--border);
+    background: var(--bg);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .nav-tab {
+    padding: 10px 20px;
+    border: 1.5px solid transparent;
+    border-bottom: none;
+    border-radius: 10px 10px 0 0;
+    font-family: var(--font);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    background: none;
+    color: var(--muted);
+    transition: all 0.18s;
+    position: relative;
+    bottom: -1.5px;
+  }
+  .nav-tab:hover { color: var(--text); background: var(--surface); }
+  .nav-tab.active {
+    color: var(--accent1);
+    background: var(--bg);
+    border-color: var(--border);
+    border-bottom-color: var(--bg);
+  }
+  .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 7px; }
+  .dot-q { background: var(--accent1); }
+  .dot-s { background: var(--accent2); }
+
+  /* PAGES */
+  .page { display: none; padding: 28px 24px; animation: fadein 0.22s ease; }
+  .page.active { display: block; }
+  @keyframes fadein { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* CONCEPT HEADER */
+  .concept-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  .concept-icon {
+    width: 48px; height: 48px;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+  }
+  .concept-icon.blue { background: var(--accent1-light); }
+  .concept-icon.green { background: var(--accent2-light); }
+  .concept-title { font-size: 22px; font-weight: 600; letter-spacing: -0.5px; }
+  .concept-subtitle { font-size: 14px; color: var(--muted); margin-top: 2px; }
+
+  /* CARDS */
+  .card {
+    background: var(--bg);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    box-shadow: var(--shadow);
+  }
+  .card-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 20px; }
+
+  /* SECTION LABEL */
+  .section-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--hint);
+    margin-bottom: 10px;
+  }
+
+  /* CONCEPT PILLS */
+  .concept-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+  .pill {
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+    border: 1px solid;
+  }
+  .pill-blue { background: var(--accent1-light); color: var(--accent1); border-color: var(--accent1-mid); }
+  .pill-green { background: var(--accent2-light); color: var(--accent2); border-color: var(--accent2-mid); }
+  .pill-amber { background: var(--accent3-light); color: var(--accent3); border-color: var(--accent3-mid); }
+
+  /* CODE BLOCK */
+  .code-block {
+    background: #1e1e2e;
+    border-radius: var(--radius-sm);
+    padding: 14px 16px;
+    font-family: var(--mono);
+    font-size: 12px;
+    line-height: 1.7;
+    color: #cdd6f4;
+    overflow-x: auto;
+    margin: 8px 0;
+  }
+  .code-block .kw { color: #cba6f7; }
+  .code-block .fn { color: #89b4fa; }
+  .code-block .str { color: #a6e3a1; }
+  .code-block .cm { color: #6c7086; }
+  .code-block .num { color: #fab387; }
+
+  /* INPUT ROW */
+  .input-row { display: flex; gap: 8px; align-items: center; margin-bottom: 14px; }
+  .inp {
+    flex: 1;
+    height: 38px;
+    border: 1.5px solid var(--border2);
+    border-radius: var(--radius-sm);
+    padding: 0 12px;
+    font-family: var(--font);
+    font-size: 14px;
+    background: var(--bg);
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .inp:focus { border-color: var(--accent1); }
+  .sel {
+    height: 38px;
+    border: 1.5px solid var(--border2);
+    border-radius: var(--radius-sm);
+    padding: 0 10px;
+    font-family: var(--font);
+    font-size: 13px;
+    background: var(--bg);
+    color: var(--text);
+    outline: none;
+    cursor: pointer;
+  }
+  .btn {
+    height: 38px;
+    padding: 0 16px;
+    border: 1.5px solid var(--border2);
+    border-radius: var(--radius-sm);
+    font-family: var(--font);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    background: var(--bg);
+    color: var(--text);
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .btn:hover { background: var(--surface); border-color: var(--border2); }
+  .btn:active { transform: scale(0.97); }
+  .btn.primary { background: var(--accent1); color: #fff; border-color: var(--accent1); }
+  .btn.primary:hover { background: #1d4ed8; }
+  .btn.green { background: var(--accent2); color: #fff; border-color: var(--accent2); }
+  .btn.green:hover { background: #047857; }
+  .btn.amber { background: var(--accent3); color: #fff; border-color: var(--accent3); }
+  .btn.amber:hover { background: #b45309; }
+  .btn.danger { background: var(--danger); color: #fff; border-color: var(--danger); }
+
+  /* QUEUE VISUALIZER */
+  #queue-track {
+    min-height: 80px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px;
+    background: var(--surface);
+    border-radius: var(--radius-sm);
+    border: 1.5px dashed var(--border2);
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    position: relative;
+    transition: background 0.2s;
+  }
+  #queue-track.highlight { background: var(--accent1-light); border-color: var(--accent1-mid); }
+
+  .queue-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    padding: 8px 12px;
+    border-radius: var(--radius-sm);
+    font-size: 12px;
+    font-weight: 500;
+    min-width: 64px;
+    text-align: center;
+    animation: slideIn 0.28s cubic-bezier(0.34,1.56,0.64,1);
+    position: relative;
+    flex-shrink: 0;
+    border: 1.5px solid transparent;
+    box-shadow: var(--shadow);
+  }
+  @keyframes slideIn { from { transform: scale(0.5) translateY(20px); opacity: 0; } to { transform: scale(1) translateY(0); opacity: 1; } }
+  @keyframes slideOut { from { transform: scale(1) translateY(0); opacity: 1; } to { transform: scale(0.5) translateY(-20px); opacity: 0; } }
+  .queue-item.removing { animation: slideOut 0.22s ease forwards; }
+  .queue-pos { font-size: 9px; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; opacity: 0.7; }
+  .queue-label { font-size: 12px; }
+  .queue-item.fifo { background: var(--accent1-light); border-color: var(--accent1-mid); color: var(--accent1); }
+  .queue-item.lifo { background: var(--accent2-light); border-color: var(--accent2-mid); color: var(--accent2); }
+  .queue-item.priority-h { background: #fef2f2; border-color: #fecaca; color: #b91c1c; }
+  .queue-item.priority-m { background: var(--accent3-light); border-color: var(--accent3-mid); color: #92400e; }
+  .queue-item.priority-l { background: var(--accent1-light); border-color: var(--accent1-mid); color: var(--accent1); }
+
+  .arrow-label {
+    font-size: 10px;
+    color: var(--hint);
+    text-align: center;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+  .enqueue-arrow { color: var(--accent2); font-size: 16px; }
+  .dequeue-arrow { color: var(--danger); font-size: 16px; }
+
+  .queue-ends { display: flex; justify-content: space-between; margin-top: 6px; }
+  .queue-end-label { font-size: 11px; color: var(--muted); font-weight: 500; }
+
+  /* DONE LIST */
+  #done-list {
+    max-height: 120px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  .done-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--muted);
+    padding: 4px 8px;
+    border-radius: var(--radius-xs);
+    background: var(--surface);
+    animation: fadeUp 0.2s ease;
+  }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+  .done-check { color: var(--accent2); font-size: 13px; }
+
+  /* STATS ROW */
+  .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 16px; }
+  .stat-box {
+    background: var(--surface);
+    border-radius: var(--radius-sm);
+    padding: 12px 14px;
+    border: 1px solid var(--border);
+  }
+  .stat-num { font-size: 24px; font-weight: 600; letter-spacing: -1px; }
+  .stat-lbl { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; font-weight: 500; }
+
+  /* EXPLAIN BOX */
+  .explain-box {
+    background: var(--surface);
+    border-radius: var(--radius-sm);
+    border-left: 3px solid var(--accent1);
+    padding: 12px 14px;
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.6;
+    margin: 12px 0;
+  }
+  .explain-box.green { border-left-color: var(--accent2); }
+  .explain-box.amber { border-left-color: var(--accent3); }
+
+  /* SOCKET SIMULATOR */
+  .socket-arena {
+    display: grid;
+    grid-template-columns: 1fr 60px 1fr;
+    gap: 0;
+    align-items: start;
+    min-height: 420px;
+    margin-bottom: 16px;
+  }
+  .socket-panel {
+    background: var(--surface);
+    border-radius: var(--radius);
+    border: 1.5px solid var(--border);
+    padding: 16px;
+    min-height: 360px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .socket-panel-title {
+    font-size: 13px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .status-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--hint);
+    transition: background 0.3s;
+  }
+  .status-dot.connected { background: var(--accent2); box-shadow: 0 0 0 3px var(--accent2-mid); }
+  .status-dot.listening { background: var(--accent3); box-shadow: 0 0 0 3px var(--accent3-mid); }
+
+  .socket-log {
+    flex: 1;
+    background: #1e1e2e;
+    border-radius: var(--radius-sm);
+    padding: 10px;
+    font-family: var(--mono);
+    font-size: 11px;
+    line-height: 1.7;
+    color: #cdd6f4;
+    overflow-y: auto;
+    max-height: 200px;
+    min-height: 100px;
+  }
+  .log-line { animation: fadeUp 0.15s ease; }
+  .log-line .ts { color: #6c7086; }
+  .log-line .ok { color: #a6e3a1; }
+  .log-line .send { color: #89b4fa; }
+  .log-line .recv { color: #f5c2e7; }
+  .log-line .sys { color: #cba6f7; }
+  .log-line .err { color: #f38ba8; }
+
+  /* WIRE ANIMATION */
+  .wire-channel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    padding: 0 4px;
+    position: relative;
+  }
+  .wire-line {
+    width: 2px;
+    height: 180px;
+    background: linear-gradient(to bottom, var(--border2) 0%, var(--border2) 100%);
+    border-radius: 2px;
+    position: relative;
+    overflow: hidden;
+  }
+  .wire-packet {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    left: -3px;
+  }
+  .wire-packet.to-server {
+    background: var(--accent1);
+    animation: travelDown 0.9s cubic-bezier(0.4,0,0.2,1) forwards;
+  }
+  .wire-packet.to-client {
+    background: var(--accent2);
+    animation: travelUp 0.9s cubic-bezier(0.4,0,0.2,1) forwards;
+  }
+  @keyframes travelDown { from { top: 0; opacity: 1; } to { top: 100%; opacity: 0.3; } }
+  @keyframes travelUp { from { top: 100%; opacity: 1; } to { top: 0; opacity: 0.3; } }
+
+  .wire-label { font-size: 9px; color: var(--hint); writing-mode: vertical-lr; letter-spacing: 0.06em; text-transform: uppercase; font-weight: 500; }
+
+  /* HANDSHAKE STEPS */
+  .handshake-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin: 12px 0;
+  }
+  .hs-step {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    border-radius: var(--radius-sm);
+    border: 1.5px solid var(--border);
+    font-size: 12px;
+    color: var(--muted);
+    background: var(--bg);
+    transition: all 0.3s;
+  }
+  .hs-step.active { background: var(--accent1-light); border-color: var(--accent1-mid); color: var(--accent1); }
+  .hs-step.done { background: var(--accent2-light); border-color: var(--accent2-mid); color: var(--accent2); }
+  .hs-step .hs-num { width: 20px; height: 20px; border-radius: 50%; background: var(--border); display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 600; flex-shrink: 0; }
+  .hs-step.active .hs-num { background: var(--accent1); color: white; }
+  .hs-step.done .hs-num { background: var(--accent2); color: white; }
+
+  /* MODE TOGGLE */
+  .mode-toggle { display: flex; gap: 6px; flex-wrap: wrap; }
+  .mode-btn {
+    padding: 6px 14px;
+    border: 1.5px solid var(--border2);
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    background: var(--bg);
+    color: var(--muted);
+    transition: all 0.15s;
+    font-family: var(--font);
+  }
+  .mode-btn:hover { background: var(--surface); }
+  .mode-btn.active { background: var(--accent1); color: white; border-color: var(--accent1); }
+
+  /* TOAST */
+  #toast {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: var(--text);
+    color: white;
+    padding: 10px 18px;
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    font-weight: 500;
+    pointer-events: none;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: all 0.22s;
+    z-index: 999;
+  }
+  #toast.show { opacity: 1; transform: none; }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 4px; height: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 4px; }
+
+  .divider { border: none; border-top: 1px solid var(--border); margin: 16px 0; }
+
+  .tag { display: inline-block; background: var(--surface2); border-radius: 4px; padding: 1px 6px; font-family: var(--mono); font-size: 11px; color: var(--muted); }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <button class="nav-tab active" onclick="showPage('queue')">
+    <span class="dot dot-q"></span>Queue Simulator
+  </button>
+  <button class="nav-tab" onclick="showPage('socket')">
+    <span class="dot dot-s"></span>Socket Simulator
+  </button>
+</nav>
+
+<!-- ===== QUEUE PAGE ===== -->
+<div class="page active" id="page-queue">
+
+  <div class="concept-header">
+    <div class="concept-icon blue">📦</div>
+    <div>
+      <div class="concept-title">Queue Data Structure</div>
+      <div class="concept-subtitle">Add items, watch them wait in line, process them out</div>
+    </div>
+  </div>
+
+  <div class="concept-row">
+    <span class="pill pill-blue">FIFO — First In First Out</span>
+    <span class="pill pill-green">LIFO — Last In First Out</span>
+    <span class="pill pill-amber">Priority Queue</span>
+  </div>
+
+  <!-- MODE SELECT -->
+  <div style="margin-bottom:14px;">
+    <div class="section-label">Queue Mode</div>
+    <div class="mode-toggle">
+      <button class="mode-btn active" id="mode-fifo" onclick="setMode('fifo')">🔵 FIFO Queue</button>
+      <button class="mode-btn" id="mode-lifo" onclick="setMode('lifo')">🟢 LIFO (Stack)</button>
+      <button class="mode-btn" id="mode-priority" onclick="setMode('priority')">🟡 Priority Queue</button>
+    </div>
+  </div>
+
+  <!-- EXPLAIN -->
+  <div class="explain-box" id="mode-explain">
+    <strong>FIFO (Queue):</strong> Items are processed in the order they arrive. The first item added is the first to be removed — like a line at a coffee shop. Python: <span class="tag">queue.Queue()</span>
+  </div>
+
+  <!-- INPUT -->
+  <div class="input-row">
+    <input class="inp" id="task-input" placeholder="Enter task name (e.g. Send Email)" maxlength="24" onkeydown="if(event.key==='Enter') enqueue()">
+    <select class="sel" id="prio-sel" style="display:none">
+      <option value="high">🔴 High</option>
+      <option value="medium" selected>🟡 Medium</option>
+      <option value="low">🔵 Low</option>
+    </select>
+    <button class="btn primary" onclick="enqueue()">+ Enqueue</button>
+    <button class="btn amber" onclick="dequeue()">Dequeue →</button>
+    <button class="btn" onclick="clearQueue()">Clear</button>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats-row">
+    <div class="stat-box">
+      <div class="stat-num" id="stat-size" style="color:var(--accent1)">0</div>
+      <div class="stat-lbl">In Queue</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-num" id="stat-enqueued" style="color:var(--accent2)">0</div>
+      <div class="stat-lbl">Enqueued</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-num" id="stat-done" style="color:var(--accent3)">0</div>
+      <div class="stat-lbl">Processed</div>
+    </div>
+  </div>
+
+  <!-- VISUAL QUEUE TRACK -->
+  <div class="section-label">Live Queue — items wait here</div>
+  <div style="display:flex; align-items:center; gap:6px; margin-bottom:6px;">
+    <div>
+      <div class="arrow-label">ENQUEUE →</div>
+      <div class="enqueue-arrow">⟶</div>
+    </div>
+    <div id="queue-track" style="flex:1">
+      <span style="color:var(--hint); font-size:12px; margin:auto;">Queue is empty — add something!</span>
+    </div>
+    <div>
+      <div class="arrow-label">← DEQUEUE</div>
+      <div class="dequeue-arrow">⟵</div>
+    </div>
+  </div>
+  <div class="queue-ends" id="queue-end-labels" style="display:none; padding:0 4px;">
+    <span class="queue-end-label">← Front (exits here)</span>
+    <span class="queue-end-label">Rear (enters here) →</span>
+  </div>
+
+  <hr class="divider">
+
+  <!-- PROCESSED -->
+  <div class="section-label">Processed Tasks</div>
+  <div id="done-list">
+    <span style="font-size:12px; color:var(--hint);">Nothing processed yet...</span>
+  </div>
+
+  <hr class="divider">
+
+  <!-- PYTHON CODE -->
+  <div class="section-label">Python Code — what's happening under the hood</div>
+  <div class="code-block" id="py-code">
+<span class="cm"># Python queue.Queue — FIFO by default</span>
+<span class="kw">import</span> queue
+
+q = queue.<span class="fn">Queue</span>()
+
+<span class="cm"># Enqueue (put)</span>
+q.<span class="fn">put</span>(<span class="str">"Send Email"</span>)
+q.<span class="fn">put</span>(<span class="str">"Process Image"</span>)
+
+<span class="cm"># Dequeue (get) — First In, First Out</span>
+task = q.<span class="fn">get</span>()   <span class="cm"># → "Send Email"</span>
+
+<span class="cm"># Check size</span>
+<span class="fn">print</span>(q.<span class="fn">qsize</span>())  <span class="cm"># → 1</span></div>
+
+</div>
+
+
+<!-- ===== SOCKET PAGE ===== -->
+<div class="page" id="page-socket">
+
+  <div class="concept-header">
+    <div class="concept-icon green">🔌</div>
+    <div>
+      <div class="concept-title">Socket Communication</div>
+      <div class="concept-subtitle">Send messages between a client and server — watch every step live</div>
+    </div>
+  </div>
+
+  <div class="concept-row">
+    <span class="pill pill-green">TCP/IP</span>
+    <span class="pill pill-blue">bind() → listen() → accept()</span>
+    <span class="pill pill-amber">connect() → send() → recv()</span>
+  </div>
+
+  <!-- HANDSHAKE STEPS -->
+  <div class="section-label">Connection Lifecycle — steps happen in order</div>
+  <div class="handshake-steps">
+    <div class="hs-step" id="hs0"><div class="hs-num">1</div><div><strong>Server: socket() + bind()</strong> — creates socket, binds to port 8080</div></div>
+    <div class="hs-step" id="hs1"><div class="hs-num">2</div><div><strong>Server: listen()</strong> — waits for incoming connections</div></div>
+    <div class="hs-step" id="hs2"><div class="hs-num">3</div><div><strong>Client: connect()</strong> — initiates connection to server</div></div>
+    <div class="hs-step" id="hs3"><div class="hs-num">4</div><div><strong>Server: accept()</strong> — handshake complete, channel open</div></div>
+    <div class="hs-step" id="hs4"><div class="hs-num">5</div><div><strong>send() / recv()</strong> — full duplex messaging active</div></div>
+  </div>
+
+  <!-- CONNECTION CONTROL -->
+  <div style="display:flex; gap:8px; margin-bottom:16px; align-items:center; flex-wrap:wrap;">
+    <button class="btn green" id="btn-connect" onclick="startConnection()">⚡ Start Connection</button>
+    <button class="btn danger" id="btn-disconnect" onclick="endConnection()" style="display:none">✕ Disconnect</button>
+    <span id="conn-status" style="font-size:12px; color:var(--hint); font-weight:500;">Not connected</span>
+  </div>
+
+  <!-- ARENA -->
+  <div class="socket-arena">
+
+    <!-- CLIENT PANEL -->
+    <div class="socket-panel">
+      <div class="socket-panel-title">
+        <div class="status-dot" id="client-dot"></div>
+        💻 Client (your machine)
+      </div>
+      <div class="section-label" style="margin:0">Send a message</div>
+      <input class="inp" id="msg-input" placeholder="Type a message..." maxlength="60" onkeydown="if(event.key==='Enter') sendMsg()" disabled>
+      <button class="btn primary" id="btn-send" onclick="sendMsg()" disabled>Send →</button>
+      <div class="section-label" style="margin-top:4px">Client log</div>
+      <div class="socket-log" id="client-log">
+        <div style="color:#6c7086">-- client not connected --</div>
+      </div>
+    </div>
+
+    <!-- WIRE -->
+    <div class="wire-channel">
+      <div class="wire-label">channel</div>
+      <div class="wire-line" id="wire-line">
+        <div class="wire-packet" id="wire-packet" style="display:none;"></div>
+      </div>
+      <div class="wire-label">tcp</div>
+    </div>
+
+    <!-- SERVER PANEL -->
+    <div class="socket-panel">
+      <div class="socket-panel-title">
+        <div class="status-dot" id="server-dot"></div>
+        🖥️ Server (port 8080)
+      </div>
+      <div class="section-label" style="margin:0">Server responses (auto)</div>
+      <div class="explain-box green" style="font-size:12px; margin:0; flex:1">
+        Server processes each message and responds automatically — simulating real socket recv() + send() patterns.
+      </div>
+      <div class="section-label" style="margin-top:4px">Server log</div>
+      <div class="socket-log" id="server-log">
+        <div style="color:#6c7086">-- server not listening --</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- PYTHON CODE -->
+  <div class="card-grid">
+    <div>
+      <div class="section-label">Server Python Code</div>
+      <div class="code-block" style="font-size:11px">
+<span class="kw">import</span> socket
+
+server = socket.<span class="fn">socket</span>()
+server.<span class="fn">bind</span>((<span class="str">'0.0.0.0'</span>, <span class="num">8080</span>))
+server.<span class="fn">listen</span>(<span class="num">5</span>)
+
+conn, addr = server.<span class="fn">accept</span>()
+
+<span class="kw">while</span> <span class="kw">True</span>:
+  data = conn.<span class="fn">recv</span>(<span class="num">1024</span>)
+  <span class="kw">if not</span> data: <span class="kw">break</span>
+  conn.<span class="fn">send</span>(b<span class="str">"ACK: "</span> + data)</div>
+    </div>
+    <div>
+      <div class="section-label">Client Python Code</div>
+      <div class="code-block" style="font-size:11px">
+<span class="kw">import</span> socket
+
+client = socket.<span class="fn">socket</span>()
+client.<span class="fn">connect</span>((<span class="str">'127.0.0.1'</span>, <span class="num">8080</span>))
+
+msg = <span class="str">"Hello Server"</span>
+client.<span class="fn">send</span>(msg.<span class="fn">encode</span>())
+
+response = client.<span class="fn">recv</span>(<span class="num">1024</span>)
+<span class="fn">print</span>(response.<span class="fn">decode</span>())
+<span class="cm"># → "ACK: Hello Server"</span></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<script>
+// ============= STATE =============
+let queueMode = 'fifo';
+let queueData = []; // {id, label, prio, el}
+let enqueueCount = 0, dequeueCount = 0;
+let connected = false;
+let hsStep = -1;
+let msgCount = 0;
+
+// ============= NAVIGATION =============
+function showPage(p) {
+  document.querySelectorAll('.page').forEach(x => x.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(x => x.classList.remove('active'));
+  document.getElementById('page-' + p).classList.add('active');
+  event.currentTarget.classList.add('active');
+}
+
+// ============= QUEUE =============
+function setMode(m) {
+  queueMode = m;
+  document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('mode-' + m).classList.add('active');
+
+  const prio = document.getElementById('prio-sel');
+  prio.style.display = m === 'priority' ? 'block' : 'none';
+
+  const explains = {
+    fifo: '<strong>FIFO (Queue):</strong> Items are processed in the order they arrive. First in = first out. Like a coffee shop line. Python: <span class="tag">queue.Queue()</span>',
+    lifo: '<strong>LIFO (Stack):</strong> The most recently added item is removed first. Like a stack of plates. Python: <span class="tag">queue.LifoQueue()</span>',
+    priority: '<strong>Priority Queue:</strong> Items are dequeued by priority, not arrival order. Higher priority = processed first, regardless of when it was added. Python: <span class="tag">queue.PriorityQueue()</span>'
+  };
+  document.getElementById('mode-explain').innerHTML = explains[m];
+
+  const codes = {
+    fifo: `<span class="cm"># Python queue.Queue — FIFO by default</span>
+<span class="kw">import</span> queue
+
+q = queue.<span class="fn">Queue</span>()
+q.<span class="fn">put</span>(<span class="str">"Send Email"</span>)
+q.<span class="fn">put</span>(<span class="str">"Process Image"</span>)
+
+task = q.<span class="fn">get</span>()   <span class="cm"># → "Send Email" (first in)</span>
+<span class="fn">print</span>(q.<span class="fn">qsize</span>())`,
+    lifo: `<span class="cm"># Python LifoQueue — Last In First Out (Stack)</span>
+<span class="kw">import</span> queue
+
+s = queue.<span class="fn">LifoQueue</span>()
+s.<span class="fn">put</span>(<span class="str">"First"</span>)
+s.<span class="fn">put</span>(<span class="str">"Second"</span>)
+s.<span class="fn">put</span>(<span class="str">"Third"</span>)
+
+top = s.<span class="fn">get</span>()   <span class="cm"># → "Third" (last in, first out)</span>`,
+    priority: `<span class="cm"># Python PriorityQueue — lower number = higher priority</span>
+<span class="kw">import</span> queue
+
+pq = queue.<span class="fn">PriorityQueue</span>()
+pq.<span class="fn">put</span>((<span class="num">2</span>, <span class="str">"Normal task"</span>))
+pq.<span class="fn">put</span>((<span class="num">1</span>, <span class="str">"Urgent task"</span>))
+pq.<span class="fn">put</span>((<span class="num">3</span>, <span class="str">"Low task"</span>))
+
+prio, task = pq.<span class="fn">get</span>()   <span class="cm"># → (1, "Urgent task")</span>`
+  };
+  document.getElementById('py-code').innerHTML = codes[m];
+
+  // re-render queue items with new style
+  renderQueue();
+  updateStats();
+}
+
+function enqueue() {
+  const inp = document.getElementById('task-input');
+  const label = inp.value.trim() || 'Task ' + (enqueueCount + 1);
+  const prio = document.getElementById('prio-sel').value;
+
+  const item = { id: Date.now(), label, prio };
+
+  if (queueMode === 'priority') {
+    const prioOrder = { high: 1, medium: 2, low: 3 };
+    let inserted = false;
+    for (let i = 0; i < queueData.length; i++) {
+      if (prioOrder[prio] < prioOrder[queueData[i].prio]) {
+        queueData.splice(i, 0, item);
+        inserted = true;
+        break;
+      }
+    }
+    if (!inserted) queueData.push(item);
+  } else {
+    queueData.push(item);
+  }
+
+  enqueueCount++;
+  inp.value = '';
+  renderQueue();
+  updateStats();
+  toast('Enqueued: ' + label);
+}
+
+function dequeue() {
+  if (!queueData.length) { toast('Queue is empty!'); return; }
+
+  let removed;
+  if (queueMode === 'lifo') {
+    removed = queueData.pop();
+  } else {
+    removed = queueData.shift();
+  }
+
+  dequeueCount++;
+  const doneList = document.getElementById('done-list');
+  if (doneList.querySelector('span')) doneList.innerHTML = '';
+
+  const now = new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit', second:'2-digit'});
+  const div = document.createElement('div');
+  div.className = 'done-item';
+  div.innerHTML = `<span class="done-check">✓</span><span style="flex:1">${removed.label}</span><span style="font-family:var(--mono);font-size:10px;color:var(--hint)">${now}</span>`;
+  doneList.prepend(div);
+
+  renderQueue();
+  updateStats();
+  toast('Processed: ' + removed.label);
+}
+
+function clearQueue() {
+  queueData = [];
+  renderQueue();
+  updateStats();
+}
+
+function renderQueue() {
+  const track = document.getElementById('queue-track');
+  const labels = document.getElementById('queue-end-labels');
+
+  if (!queueData.length) {
+    track.innerHTML = '<span style="color:var(--hint); font-size:12px; margin:auto;">Queue is empty — add something!</span>';
+    track.classList.remove('highlight');
+    labels.style.display = 'none';
+    return;
+  }
+
+  track.innerHTML = '';
+  track.classList.add('highlight');
+  labels.style.display = 'flex';
+
+  queueData.forEach((item, i) => {
+    const el = document.createElement('div');
+    el.className = 'queue-item';
+
+    let cls, posLabel;
+    if (queueMode === 'fifo') {
+      cls = 'fifo';
+      posLabel = i === 0 ? '← FRONT' : i === queueData.length - 1 ? 'REAR →' : '#' + (i + 1);
+    } else if (queueMode === 'lifo') {
+      cls = 'lifo';
+      posLabel = i === queueData.length - 1 ? '← TOP' : '#' + (i + 1);
+    } else {
+      cls = item.prio === 'high' ? 'priority-h' : item.prio === 'medium' ? 'priority-m' : 'priority-l';
+      const icons = { high: '🔴', medium: '🟡', low: '🔵' };
+      posLabel = icons[item.prio] + ' ' + item.prio;
+    }
+
+    el.classList.add(cls);
+    el.innerHTML = `<span class="queue-pos">${posLabel}</span><span class="queue-label">${item.label}</span>`;
+    track.appendChild(el);
+  });
+}
+
+function updateStats() {
+  document.getElementById('stat-size').textContent = queueData.length;
+  document.getElementById('stat-enqueued').textContent = enqueueCount;
+  document.getElementById('stat-done').textContent = dequeueCount;
+}
+
+// ============= SOCKET =============
+function updateHsStep(step) {
+  const steps = document.querySelectorAll('.hs-step');
+  steps.forEach((el, i) => {
+    el.classList.remove('active', 'done');
+    if (i < step) el.classList.add('done');
+    else if (i === step) el.classList.add('active');
+  });
+}
+
+function clientLog(html) {
+  const log = document.getElementById('client-log');
+  if (log.querySelector('div[style]')) log.innerHTML = '';
+  const line = document.createElement('div');
+  line.className = 'log-line';
+  const now = new Date().toLocaleTimeString([], {hour12:false});
+  line.innerHTML = `<span class="ts">[${now}]</span> ${html}`;
+  log.appendChild(line);
+  log.scrollTop = log.scrollHeight;
+}
+
+function serverLog(html) {
+  const log = document.getElementById('server-log');
+  if (log.querySelector('div[style]')) log.innerHTML = '';
+  const line = document.createElement('div');
+  line.className = 'log-line';
+  const now = new Date().toLocaleTimeString([], {hour12:false});
+  line.innerHTML = `<span class="ts">[${now}]</span> ${html}`;
+  log.appendChild(line);
+  log.scrollTop = log.scrollHeight;
+}
+
+function animatePacket(direction) {
+  const packet = document.getElementById('wire-packet');
+  packet.className = 'wire-packet ' + direction;
+  packet.style.display = 'block';
+  setTimeout(() => { packet.style.display = 'none'; }, 950);
+}
+
+function startConnection() {
+  if (connected) return;
+  const status = document.getElementById('conn-status');
+  const btnConn = document.getElementById('btn-connect');
+  const btnDisc = document.getElementById('btn-disconnect');
+
+  // Simulate handshake
+  updateHsStep(0);
+  serverLog('<span class="sys">socket() created on port 8080</span>');
+  serverLog('<span class="sys">bind(\'0.0.0.0\', 8080) → OK</span>');
+  document.getElementById('server-dot').className = 'status-dot listening';
+  status.textContent = 'Server listening...';
+
+  setTimeout(() => {
+    updateHsStep(1);
+    serverLog('<span class="ok">listen(5) → waiting for connections...</span>');
+  }, 400);
+
+  setTimeout(() => {
+    updateHsStep(2);
+    clientLog('<span class="sys">socket() created</span>');
+    clientLog('<span class="send">connect(\'127.0.0.1\', 8080)...</span>');
+    animatePacket('to-server');
+  }, 900);
+
+  setTimeout(() => {
+    updateHsStep(3);
+    serverLog('<span class="ok">accept() → client connected from 127.0.0.1</span>');
+    clientLog('<span class="ok">connected! Channel open ✓</span>');
+    document.getElementById('client-dot').className = 'status-dot connected';
+    document.getElementById('server-dot').className = 'status-dot connected';
+    animatePacket('to-client');
+  }, 1700);
+
+  setTimeout(() => {
+    updateHsStep(4);
+    connected = true;
+    status.textContent = '⚡ Connected — ready to send messages';
+    btnConn.style.display = 'none';
+    btnDisc.style.display = 'inline-block';
+    document.getElementById('msg-input').disabled = false;
+    document.getElementById('btn-send').disabled = false;
+    serverLog('<span class="ok">ready to recv() messages</span>');
+  }, 2200);
+}
+
+function endConnection() {
+  connected = false;
+  updateHsStep(-1);
+  document.getElementById('client-dot').className = 'status-dot';
+  document.getElementById('server-dot').className = 'status-dot';
+  document.getElementById('conn-status').textContent = 'Not connected';
+  document.getElementById('btn-connect').style.display = 'inline-block';
+  document.getElementById('btn-disconnect').style.display = 'none';
+  document.getElementById('msg-input').disabled = true;
+  document.getElementById('btn-send').disabled = true;
+  clientLog('<span class="err">connection closed</span>');
+  serverLog('<span class="err">client disconnected</span>');
+}
+
+const responses = [
+  msg => `ACK: ${msg}`,
+  msg => `Received "${msg}" — data stored`,
+  msg => `Echo: ${msg.toUpperCase()}`,
+  msg => `OK [${msg.length} bytes] processed`,
+  msg => `Status 200: "${msg}" handled`,
+];
+
+function sendMsg() {
+  if (!connected) { toast('Connect first!'); return; }
+  const inp = document.getElementById('msg-input');
+  const msg = inp.value.trim();
+  if (!msg) return;
+
+  clientLog(`<span class="send">send(b"${msg}")</span>`);
+  animatePacket('to-server');
+  inp.value = '';
+  msgCount++;
+
+  setTimeout(() => {
+    serverLog(`<span class="recv">recv(1024) → "${msg}"</span>`);
+    const resp = responses[msgCount % responses.length](msg);
+    serverLog(`<span class="send">send(b"${resp}")</span>`);
+    animatePacket('to-client');
+
+    setTimeout(() => {
+      clientLog(`<span class="recv">recv(1024) → "${resp}"</span>`);
+    }, 500);
+  }, 600);
+}
+
+// ============= TOAST =============
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toast._t);
+  toast._t = setTimeout(() => t.classList.remove('show'), 1800);
+}
+</script>
+</body>
+</html>
